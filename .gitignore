@@ -1,0 +1,3 @@
+api/tmp/*
+worker/tmp/*
+test.csv
