@@ -1,19 +1,26 @@
 package queue
 
 import (
-	"github.com/redis/go-redis/v9"
 	"context"
+	"log"
+	"os"
+
+	"github.com/joho/godotenv"
+	"github.com/redis/go-redis/v9"
 )
 
-func Publish(path string) (bool, error){
+func Publish(path string) (bool, error) {
+	if err := godotenv.Load(".env"); err != nil {
+		log.Fatalf("Error loading .env file")
+	}
 	ctx := context.Background()
 	rds := redis.NewClient(&redis.Options{
-		Addr: "localhost:6379",
-		Password: "",
-		DB: 0,
+		Addr:     os.Getenv("REDIS_HOST") + ":" + os.Getenv("REDIS_PORT"),
+		Password: os.Getenv("REDIS_PASSWORD"),
+		DB:       0,
 	})
 
-	err :=rds.Publish(
+	err := rds.Publish(
 		ctx,
 		"fileParse",
 		path,
@@ -22,6 +29,6 @@ func Publish(path string) (bool, error){
 	if err != nil {
 		return false, err
 	}
-	
+
 	return true, nil
 }

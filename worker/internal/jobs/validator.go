@@ -2,6 +2,7 @@ package jobs
 
 import (
 	"fmt"
+	"log"
 	"net/mail"
 	"regexp"
 	"strconv"
@@ -9,19 +10,19 @@ import (
 )
 
 func Validate(c chan [][]string) {
+	fmt.Println("validating")
 	channel := <-c
-
+	var newChanData [][]string
 	for line, channelData := range channel {
-		if line == 0 {
-			continue
-		}
 		_, err := validateLine(channelData)
 		if err != nil {
-			close(c)
-			fmt.Printf("error line %d : %s \n", line, err.Error())
-			break
+			log.Printf("error line %d : %s \n", line, err.Error())
+		} else {
+			newChanData = append(newChanData, channelData)
 		}
 	}
+
+	c <- newChanData
 }
 
 func validateLine(line []string) (bool, error) {

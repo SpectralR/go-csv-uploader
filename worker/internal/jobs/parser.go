@@ -17,6 +17,7 @@ func Parse(file string, c chan [][]string) {
 	csvReader := csv.NewReader(fileContent)
 	fileData, readErr := csvReader.ReadAll()
 
+	fileData = fileData[1:]
 	if readErr != nil {
 		fmt.Println(readErr.Error())
 	}
