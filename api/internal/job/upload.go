@@ -35,7 +35,8 @@ func Upload(response http.ResponseWriter, request *http.Request) {
 
 	defer file.Close()
 
-	if !strings.Contains(handler.Header["Content-Type"][0], "text/csv") {
+	if !strings.Contains(handler.Header["Content-Type"][0], "application/octet-stream") {
+		http.Error(response, handler.Header["Content-Type"][0], http.StatusUnprocessableEntity)
 		http.Error(response, "Error Wrong file Format", http.StatusUnprocessableEntity)
 		return
 	}

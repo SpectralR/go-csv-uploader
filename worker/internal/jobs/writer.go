@@ -3,11 +3,11 @@ package jobs
 import (
 	"go-async-training-worker/internal/db"
 	"log"
-	"fmt"
+	"sync"
 )
 
-func Write(c chan [][]string) {
-	fmt.Println("writing")
+func Write(c chan [][]string, wg *sync.WaitGroup) {
+	defer wg.Done()
 	channel := <-c
 	if channel != nil {
 		db.Init(".env")

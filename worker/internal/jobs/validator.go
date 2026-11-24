@@ -9,9 +9,8 @@ import (
 	"time"
 )
 
-func Validate(c chan [][]string) {
-	fmt.Println("validating")
-	channel := <-c
+func Validate(in chan [][]string, out chan [][]string) {
+	channel := <-in
 	var newChanData [][]string
 	for line, channelData := range channel {
 		_, err := validateLine(channelData)
@@ -22,7 +21,7 @@ func Validate(c chan [][]string) {
 		}
 	}
 
-	c <- newChanData
+	out <- newChanData
 }
 
 func validateLine(line []string) (bool, error) {

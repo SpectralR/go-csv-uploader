@@ -44,8 +44,17 @@ func PrepareInsert(data [][]string) string {
 		values = append(values, "(" + strings.Join(lineData, ",") + ")")
 	}
 
-	finalQuery := fmt.Sprintf(baseQuery, strings.Join(values, ",")) + ";"
-	return finalQuery
+	valuedQuery := fmt.Sprintf(baseQuery, strings.Join(values, ","))
+
+	return valuedQuery + ` ON CONFLICT (customer_id) DO UPDATE
+		SET first_name = excluded.first_name,
+		last_name = excluded.last_name,
+		company = excluded.company,
+		city = excluded.city,
+		country = excluded.city,
+		email = excluded.email,
+		sub_date = excluded.sub_date,
+		website = excluded.website;`
 }
 
 func formatRow(lineData []string) []string {

@@ -1,3 +1,5 @@
 api/tmp/*
 worker/tmp/*
 test.csv
+.env*
+customers-1000.csv

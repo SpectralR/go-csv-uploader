@@ -1,12 +1,16 @@
 module go-async-training-worker
 
-go 1.26
+go 1.26.0
 
 require (
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/joho/godotenv v1.5.1 // indirect
+	github.com/k0kubun/pp/v3 v3.5.4 // indirect
 	github.com/lib/pq v1.12.3 // indirect
+	github.com/mattn/go-colorable v0.1.15 // indirect
+	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/redis/go-redis/v9 v9.22.0 // indirect
 	go.uber.org/atomic v1.11.0 // indirect
 	golang.org/x/sys v0.30.0 // indirect
+	golang.org/x/text v0.42.0 // indirect
 )

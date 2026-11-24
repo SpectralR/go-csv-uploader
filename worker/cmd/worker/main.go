@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"sync"
 
 	"go-async-training-worker/internal/jobs"
 	"go-async-training-worker/internal/queue"
@@ -10,9 +11,23 @@ import (
 func main() {
 	file := <-queue.Sub(context.Background(), "fileParse")
 
-	channel := make(chan [][]string)
+	var wg sync.WaitGroup
+	parsed := make(chan [][]string)
+	valid := make(chan [][]string)
 
-	go jobs.Parse(file.Payload, channel)
-	go jobs.Validate(channel)
-	go jobs.Write(channel)
+	wg.Add(3)
+
+	go func(){ 
+		defer close(parsed)
+		defer wg.Done()
+		jobs.Parse(file.Payload, parsed) 
+	}()
+	go func(){
+		defer close(valid)
+		defer wg.Done()
+		jobs.Validate(parsed, valid)
+	}()
+	go jobs.Write(valid, &wg)
+
+	wg.Wait()
 }

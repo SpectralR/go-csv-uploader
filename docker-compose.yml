@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   # --- API : reçoit les fichiers et pousse les jobs dans la queue ---
   api:
@@ -8,7 +6,7 @@ services:
       dockerfile: Dockerfile
     container_name: jobs-api
     ports:
-      - "8080:8080"
+      - "8082:8080"
     environment:
       - PORT=8080
       - REDIS_ADDR=redis:6379
@@ -44,8 +42,6 @@ services:
     restart: unless-stopped
     networks:
       - jobs-net
-    deploy:
-      replicas: 2
 
   # --- Redis : queue de jobs ---
   redis:
@@ -68,10 +64,8 @@ services:
   postgres:
     image: postgres:16-alpine
     container_name: jobs-postgres
-    environment:
-      - POSTGRES_USER=jobs_user
-      - POSTGRES_PASSWORD=jobs_password
-      - POSTGRES_DB=jobs_db
+    env_file:
+      - .env.pg
     ports:
       - "5432:5432"
     healthcheck:
